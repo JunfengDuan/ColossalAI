@@ -1,0 +1,38 @@
+{
+    "basic": {
+        "pretrained": "path/to/pretrained_model",
+        "dataset": "path/to/dataset.jsonl",
+        "plugin": "zero2",
+        "save_dir": "checkpoint_dir",
+        "tensorboard_dir": null,
+        "config_file": "training_config.json"
+    },
+    "training": {
+        "num_epochs": 1,
+        "accumulation_steps": 1,
+        "batch_size": 2,
+        "lr": 3e-4,
+        "max_length": 8192,
+        "mixed_precision": "bf16",
+        "grad_clip": 1.0,
+        "weight_decay": 0.1,
+        "warmup_steps": null,
+        "use_grad_checkpoint": false,
+        "use_flash_attn": false
+    },
+    "distributed": {
+        "tp": 1,
+        "pp": 1,
+        "sp": 1,
+        "ep": 1,
+        "zero_stage": 1,
+        "sp_mode": "split_gather",
+        "enable_sequence_parallelism": false,
+        "zero_cpu_offload": false,
+        "microbatch_size": 1
+    },
+    "lora": {
+        "lora_rank": 0,
+        "lora_alpha": 8
+    }
+}
