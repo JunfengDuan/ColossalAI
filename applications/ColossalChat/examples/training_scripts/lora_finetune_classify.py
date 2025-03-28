@@ -388,20 +388,24 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default='config.json', help='Path to config file')
     cmd_args = parser.parse_args()
+
+    # 加载并合并配置
     config = load_config(cmd_args.config)
+    merged_config = {
+        **config.get('basic', {}),
+        **config.get('training', {}),
+        **config.get('distributed', {}),
+        **config.get('lora', {})
+    }
 
-    # 提取参数
-    basic = config.get('basic', {})
-    training = config.get('training', {})
-    distributed = config.get('distributed', {})
-    lora = config.get('lora', {})
-
-    # 必填参数检查
-    if not basic.get('pretrained') or not basic.get('dataset'):
+    # 参数校验
+    if not merged_config.get('pretrained') or not merged_config.get('dataset'):
         raise ValueError("pretrained and dataset are required in config.json")
 
-    # 原参数间逻辑校验
-    if basic['plugin'] in ["3d", "moe"] and distributed['pp'] > 1 and training['accumulation_steps'] > 1:
+    if merged_config.get('plugin') in ["3d", "moe"] and merged_config.get('pp', 0) > 1 \
+            and merged_config.get('accumulation_steps', 0) > 1:
         raise ValueError("Accumulation steps should be 1 when using PP.")
 
+    # 转换为命名空间对象
+    args = argparse.Namespace(**merged_config)
     train(args)

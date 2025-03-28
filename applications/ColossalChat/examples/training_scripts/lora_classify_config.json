@@ -1,38 +1,34 @@
 {
     "basic": {
-        "pretrained": "path/to/pretrained_model",
-        "dataset": "path/to/dataset.jsonl",
-        "plugin": "zero2",
-        "save_dir": "checkpoint_dir",
-        "tensorboard_dir": null,
-        "config_file": "training_config.json"
+        "pretrained": "deepseek-ai/deepseek-moe-16b-base",
+        "dataset": "path/to/dataset",
+        "max_length": 2048,
+        "save_dir": "./output",
+        "config_file": "config.json",
+        "tensorboard_dir": "./logs"
     },
     "training": {
-        "num_epochs": 1,
-        "accumulation_steps": 1,
         "batch_size": 2,
-        "lr": 3e-4,
-        "max_length": 8192,
-        "mixed_precision": "bf16",
+        "num_epochs": 3,
+        "accumulation_steps": 8,
+        "lr": 2e-5,
+        "weight_decay": 0.01,
         "grad_clip": 1.0,
-        "weight_decay": 0.1,
-        "warmup_steps": null,
-        "use_grad_checkpoint": false,
-        "use_flash_attn": false
+        "mixed_precision": "bf16",
+        "use_grad_checkpoint": true,
+        "use_flash_attn": true
     },
     "distributed": {
-        "tp": 1,
+        "plugin": "moe",
+        "ep": 2,
+        "tp": 2,
         "pp": 1,
         "sp": 1,
-        "ep": 1,
         "zero_stage": 1,
-        "sp_mode": "split_gather",
-        "enable_sequence_parallelism": false,
-        "zero_cpu_offload": false,
         "microbatch_size": 1
     },
     "lora": {
-        "lora_rank": 0,
-        "lora_alpha": 8
+        "lora_rank": 8,
+        "lora_alpha": 16
     }
 }
